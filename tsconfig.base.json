@@ -13,8 +13,14 @@
     "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "strict": true,
+    "strictNullChecks": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@ng-inject-control/ng-inject-control": [
+        "packages/ng-inject-control/src/index.ts"
+      ]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
