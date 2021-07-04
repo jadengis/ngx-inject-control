@@ -99,26 +99,75 @@ describe('InjectControlDirective', () => {
   });
 
   describe('with existing value', () => {
-    beforeEach(() => {
-      fg = new FormGroup({
-        person: new FormControl({ name: 'Bobo', age: '25' }),
-      });
-      spectator = createDirective(
-        `<form [formGroup]="control">
+    describe('that matches expected format', () => {
+      beforeEach(() => {
+        fg = new FormGroup({
+          person: new FormControl({ name: 'Bobo', age: '25' }),
+        });
+        spectator = createDirective(
+          `<form [formGroup]="control">
         <ng-injectable-form injectControl="person"></ng-injectable-form>
       </form>`,
-        {
-          hostProps: {
-            control: fg,
-          },
-        }
-      );
+          {
+            hostProps: {
+              control: fg,
+            },
+          }
+        );
+      });
+
+      it('should copy the value to the injected control', () => {
+        expect(spectator.query('#name-input')).toContainValue('Bobo');
+        expect(spectator.query('#age-input')).toContainValue('25');
+        expect(fg.valid).toEqual(true);
+      });
     });
 
-    it('should copy the value to the injected control', () => {
-      expect(spectator.query('#name-input')).toContainValue('Bobo');
-      expect(spectator.query('#age-input')).toContainValue('25');
-      expect(fg.valid).toEqual(true);
+    describe('that is missing values', () => {
+      beforeEach(() => {
+        fg = new FormGroup({
+          person: new FormControl({ name: 'Bobo' }),
+        });
+        spectator = createDirective(
+          `<form [formGroup]="control">
+        <ng-injectable-form injectControl="person"></ng-injectable-form>
+      </form>`,
+          {
+            hostProps: {
+              control: fg,
+            },
+          }
+        );
+      });
+
+      it('should copy the value to the injected control', () => {
+        expect(spectator.query('#name-input')).toContainValue('Bobo');
+        expect(spectator.query('#age-input')).toContainValue('');
+      });
+    });
+
+    describe('that have too many values', () => {
+      beforeEach(() => {
+        fg = new FormGroup({
+          person: new FormControl({ name: 'Bobo', age: 25, height: 200 }),
+        });
+        spectator = createDirective(
+          `<form [formGroup]="control">
+        <ng-injectable-form injectControl="person"></ng-injectable-form>
+      </form>`,
+          {
+            hostProps: {
+              control: fg,
+            },
+          }
+        );
+      });
+
+      it('should copy the value to the injected control', () => {
+        expect(spectator.query('#name-input')).toContainValue('Bobo');
+        expect(spectator.query('#age-input')).toContainValue('25');
+        expect(fg.valid).toEqual(true);
+      });
     });
   });
 

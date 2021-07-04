@@ -41,7 +41,7 @@ export class InjectControlDirective implements OnInit {
         );
       }
       if (control.value) {
-        this.host.control.setValue(control.value);
+        this.host.control.patchValue(control.value);
       }
       if (control.validator) {
         this.host.control.setValidators(control.validator);
