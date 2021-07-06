@@ -45,6 +45,7 @@
     "@angular-eslint/eslint-plugin": "~12.0.0",
     "@angular-eslint/eslint-plugin-template": "~12.0.0",
     "@angular-eslint/template-parser": "~12.0.0",
+    "@angular-extensions/pretty-html-log": "^4.0.1",
     "@angular/compiler-cli": "^12.0.0",
     "@angular/language-service": "^12.0.0",
     "@ngneat/spectator": "^7.2.0",

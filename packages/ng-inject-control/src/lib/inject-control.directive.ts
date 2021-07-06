@@ -1,12 +1,25 @@
-import { Directive, Host, Inject, Input, OnInit } from '@angular/core';
-import { ControlContainer, FormArray, FormGroup } from '@angular/forms';
+import {
+  Directive,
+  Host,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { AbstractControl, ControlContainer, FormGroup } from '@angular/forms';
 import { InjectableControl } from './injectable-control.model';
 import { NG_INJECTABLE_CONTROL } from './injectable-control.token';
+
+/**
+ * Work around for ExpressionChangeAfterCheckedError from
+ * https://stackoverflow.com/questions/45661010/dynamic-nested-reactive-form-expressionchangedafterithasbeencheckederror
+ */
+const resolvedPromise = (() => Promise.resolve(null))();
 
 @Directive({
   selector: '[injectControl]',
 })
-export class InjectControlDirective implements OnInit {
+export class InjectControlDirective implements OnInit, OnDestroy {
   constructor(
     private readonly controlContainer: ControlContainer,
     @Host()
@@ -27,6 +40,8 @@ export class InjectControlDirective implements OnInit {
     }
   }
 
+  private originalControl?: AbstractControl;
+
   /**
    * TODO: Use on changes instead and support a case where the input can be
    * changed, similar to how FormControlName and FormControlDirective work.
@@ -40,24 +55,44 @@ export class InjectControlDirective implements OnInit {
           `No control ${this.injectControl} in control container`
         );
       }
-      if (control.value) {
-        this.host.control.patchValue(control.value);
-      }
-      if (control.validator) {
-        this.host.control.setValidators(control.validator);
-        this.host.control.updateValueAndValidity({ onlySelf: true });
-      }
-      if (control.asyncValidator) {
-        this.host.control.setAsyncValidators(control.asyncValidator);
-        this.host.control.updateValueAndValidity({ onlySelf: true });
-      }
-      parent.setControl(this.injectControl, this.host.control);
-    } else if (parent instanceof FormArray) {
-      parent.push(this.host.control);
+      this.originalControl = control;
+      resolvedPromise.then(() => {
+        if (control.value) {
+          this.host.control.patchValue(control.value);
+        }
+        if (control.validator) {
+          this.host.control.setValidators(control.validator);
+          this.host.control.updateValueAndValidity({
+            onlySelf: true,
+            emitEvent: false,
+          });
+        }
+        if (control.asyncValidator) {
+          this.host.control.setAsyncValidators(control.asyncValidator);
+          this.host.control.updateValueAndValidity({
+            onlySelf: true,
+            emitEvent: false,
+          });
+        }
+        parent.setControl(this.injectControl, this.host.control);
+        parent.updateValueAndValidity({ emitEvent: false });
+      });
     } else {
       throw new Error(
         `Unsupported control container type ${parent?.constructor.name}`
       );
+    }
+  }
+
+  ngOnDestroy(): void {
+    const parent = this.controlContainer.control;
+    if (parent instanceof FormGroup) {
+      resolvedPromise.then(() => {
+        if (this.originalControl) {
+          parent.setControl(this.injectControl, this.originalControl);
+          parent.updateValueAndValidity({ emitEvent: false });
+        }
+      });
     }
   }
 }
