@@ -1,3 +1,9 @@
+# 0.2.0
+
+### Fixes
+
+- Fixes an issue where disabled states were not copied from correctly from the original control. May be breaking.
+
 # 0.1.2
 
 ### Fixes
