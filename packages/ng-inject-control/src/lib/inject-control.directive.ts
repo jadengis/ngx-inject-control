@@ -38,9 +38,11 @@ export class InjectControlDirective implements OnInit, OnDestroy {
     } else if (!isDisabled && control.disabled) {
       control.enable();
     }
+    this.isDisabled = isDisabled;
   }
 
   private originalControl?: AbstractControl;
+  private isDisabled?: boolean;
 
   /**
    * TODO: Use on changes instead and support a case where the input can be
@@ -59,6 +61,12 @@ export class InjectControlDirective implements OnInit, OnDestroy {
       resolvedPromise.then(() => {
         if (control.value) {
           this.host.control.patchValue(control.value);
+        }
+        if (this.isDisabled === undefined && control.enabled) {
+          this.host.control.enable();
+        }
+        if (this.isDisabled === undefined && control.disabled) {
+          this.host.control.disable();
         }
         if (control.validator) {
           this.host.control.setValidators(control.validator);

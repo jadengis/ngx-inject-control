@@ -367,6 +367,45 @@ describe('InjectControlDirective', () => {
         expect(spectator.query('#age-input')).toBeFalsy();
         const name = spectator.query('#name-input-2') as HTMLSelectElement;
         expect(name.value).toEqual('Robert');
+        expect(name.disabled).toEqual(false);
+      });
+    });
+
+    describe('with a disabled form', () => {
+      beforeEach(async () => {
+        fg = new FormGroup({
+          data: new FormControl({
+            type: 'foo',
+            person: {
+              name: 'Robert',
+              age: 25,
+            },
+          }),
+        });
+        fg.disable();
+        spectator = createDirective(
+          `<form [formGroup]="control">
+        <ng-composite-form injectControl="data"></ng-composite-form>
+      </form>`,
+          {
+            hostProps: {
+              control: fg,
+            },
+          }
+        );
+      });
+
+      it('should be able to switch and stay disabled', async () => {
+        spectator.detectChanges();
+        await spectator.fixture.whenStable();
+        spectator.detectChanges();
+        const select = spectator.query('#type-select') as HTMLSelectElement;
+        spectator.selectOption(select, 'bar');
+        await spectator.fixture.whenStable();
+        expect(spectator.query('#name-input')).toBeFalsy();
+        expect(spectator.query('#age-input')).toBeFalsy();
+        const name = spectator.query('#name-input-2') as HTMLSelectElement;
+        expect(name.disabled).toEqual(true);
       });
     });
   });
