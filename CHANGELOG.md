@@ -1,3 +1,9 @@
+# 0.3.0
+
+### Features
+
+- Upgrade library to support Angular 13
+
 # 0.2.0
 
 ### Fixes
