@@ -3,10 +3,16 @@ import {
   Host,
   Inject,
   Input,
+  OnChanges,
   OnDestroy,
-  OnInit,
+  SimpleChanges,
 } from '@angular/core';
-import { AbstractControl, ControlContainer, FormGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  ControlContainer,
+  FormArray,
+  FormGroup,
+} from '@angular/forms';
 import { InjectableControl } from './injectable-control.model';
 import { NG_INJECTABLE_CONTROL } from './injectable-control.token';
 
@@ -19,16 +25,16 @@ const resolvedPromise = (() => Promise.resolve(null))();
 @Directive({
   selector: '[injectControl]',
 })
-export class InjectControlDirective implements OnInit, OnDestroy {
+export class InjectControlDirective implements OnChanges, OnDestroy {
   constructor(
-    private readonly controlContainer: ControlContainer,
+    private readonly parent: ControlContainer,
     @Host()
     @Inject(NG_INJECTABLE_CONTROL)
     private readonly host: InjectableControl
   ) {}
 
-  @Input()
-  readonly injectControl!: string;
+  @Input('injectControl')
+  readonly controlName!: string | number;
 
   @Input()
   set disabled(isDisabled: boolean) {
@@ -44,63 +50,106 @@ export class InjectControlDirective implements OnInit, OnDestroy {
   private originalControl?: AbstractControl;
   private isDisabled?: boolean;
 
-  /**
-   * TODO: Use on changes instead and support a case where the input can be
-   * changed, similar to how FormControlName and FormControlDirective work.
-   */
-  ngOnInit(): void {
-    const parent = this.controlContainer.control;
-    if (parent instanceof FormGroup) {
-      const control = parent.get(this.injectControl);
-      if (!control) {
-        throw new Error(
-          `No control ${this.injectControl} in control container`
-        );
+  ngOnChanges(changes: SimpleChanges): void {
+    const change = changes.controlName;
+    if (change) {
+      if (!change.firstChange) {
+        this._tearDownControl(change.previousValue);
       }
-      this.originalControl = control;
-      resolvedPromise.then(() => {
-        if (control.value) {
-          this.host.control.patchValue(control.value);
-        }
-        if (this.isDisabled === undefined && control.enabled) {
-          this.host.control.enable();
-        }
-        if (this.isDisabled === undefined && control.disabled) {
-          this.host.control.disable();
-        }
-        if (control.validator) {
-          this.host.control.setValidators(control.validator);
-          this.host.control.updateValueAndValidity({
-            onlySelf: true,
-            emitEvent: false,
-          });
-        }
-        if (control.asyncValidator) {
-          this.host.control.setAsyncValidators(control.asyncValidator);
-          this.host.control.updateValueAndValidity({
-            onlySelf: true,
-            emitEvent: false,
-          });
-        }
-        parent.setControl(this.injectControl, this.host.control);
-        parent.updateValueAndValidity({ emitEvent: false });
-      });
-    } else {
-      throw new Error(
-        `Unsupported control container type ${parent?.constructor.name}`
-      );
+      this._setUpControl();
     }
   }
 
   ngOnDestroy(): void {
-    const parent = this.controlContainer.control;
-    if (parent instanceof FormGroup) {
-      resolvedPromise.then(() => {
-        if (this.originalControl) {
-          parent.setControl(this.injectControl, this.originalControl);
-          parent.updateValueAndValidity({ emitEvent: false });
-        }
-      });
-    }
+    this._tearDownControl(this.controlName);
   }
+
+  private _setUpControl(): void {
+    const parent = this.parent.control;
+    const control = resolveControl(parent, this.controlName);
+    if (!control) {
+      throw new Error(`No control ${this.controlName} in control container`);
+    }
+    this.originalControl = control;
+    resolvedPromise.then(() => {
+      copyControlState(this.host, control, this.isDisabled);
+      replaceInParent(
+        parent as FormGroup | FormArray,
+        this.controlName,
+        this.host.control
+      );
+    });
+  }
+
+  private _tearDownControl(name: string | number): void {
+    const parent = this.parent.control;
+    resolvedPromise.then(() => {
+      if (this.originalControl) {
+        replaceInParent(
+          parent as FormGroup | FormArray,
+          name,
+          this.originalControl
+        );
+      }
+    });
+  }
+}
+
+function copyControlState(
+  host: InjectableControl,
+  control: AbstractControl,
+  isDisabled?: boolean
+): void {
+  if (control.value) {
+    host.control.patchValue(control.value);
+  }
+  if (isDisabled === undefined && control.enabled) {
+    host.control.enable();
+  }
+  if (isDisabled === undefined && control.disabled) {
+    host.control.disable();
+  }
+  if (control.validator) {
+    host.control.setValidators(control.validator);
+    host.control.updateValueAndValidity({
+      onlySelf: true,
+      emitEvent: false,
+    });
+  }
+  if (control.asyncValidator) {
+    host.control.setAsyncValidators(control.asyncValidator);
+    host.control.updateValueAndValidity({
+      onlySelf: true,
+      emitEvent: false,
+    });
+  }
+}
+function resolveControl(parent: AbstractControl | null, name: string | number) {
+  if (parent instanceof FormGroup) {
+    if (typeof name !== 'string') {
+      throw new Error(`name must be a string`);
+    }
+    return parent.get(name);
+  } else if (parent instanceof FormArray) {
+    if (typeof name !== 'number') {
+      throw new Error(`name must be a number`);
+    }
+    return parent.at(name);
+  }
+  throw new Error(
+    `Unsupported control container type ${parent?.constructor.name}`
+  );
+}
+
+function replaceInParent(
+  parent: FormGroup | FormArray,
+  name: string | number,
+  control: AbstractControl
+): void {
+  if (parent instanceof FormGroup) {
+    parent.setControl(name as string, control);
+  } else {
+    parent.setControl(name as number, control);
+  }
+  parent.updateValueAndValidity({ emitEvent: false });
 }

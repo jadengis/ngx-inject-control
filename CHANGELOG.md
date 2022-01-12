@@ -1,3 +1,11 @@
+# 0.3.0
+
+### Features
+
+- Upgrade library to support Angular 13
+- Support for `FormArray` parents
+- Support for changing input value
+
 # 0.2.0
 
 ### Fixes
