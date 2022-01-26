@@ -1,25 +1,25 @@
 {
-  "name": "ng-inject-control",
-  "version": "0.3.0",
+  "name": "ngx-inject-control",
+  "version": "1.0.0",
   "description": "Simple, reusable form components in Angular",
   "publishConfig": {
     "access": "public"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jadengis/ng-inject-control/issues"
+    "url": "https://github.com/jadengis/ngx-inject-control/issues"
   },
-  "homepage": "https://github.com/jadengis/ng-inject-control#readme",
+  "homepage": "https://github.com/jadengis/ngx-inject-control#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jadengis/ng-inject-control"
+    "url": "https://github.com/jadengis/ngx-inject-control"
   },
   "keywords": [
     "angular",
     "angular 2",
     "forms",
     "inject control",
-    "ng inject control"
+    "ngx inject control"
   ],
   "author": {
     "name": "John Dengis",

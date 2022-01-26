@@ -14,7 +14,7 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { InjectableControl } from './injectable-control.model';
-import { NG_INJECTABLE_CONTROL } from './injectable-control.token';
+import { NGX_INJECTABLE_CONTROL } from './injectable-control.token';
 
 /**
  * Work around for ExpressionChangeAfterCheckedError from
@@ -23,17 +23,17 @@ import { NG_INJECTABLE_CONTROL } from './injectable-control.token';
 const resolvedPromise = (() => Promise.resolve(null))();
 
 @Directive({
-  selector: '[injectControl]',
+  selector: '[injectControlName]',
 })
-export class InjectControlDirective implements OnChanges, OnDestroy {
+export class InjectControlNameDirective implements OnChanges, OnDestroy {
   constructor(
     private readonly parent: ControlContainer,
     @Host()
-    @Inject(NG_INJECTABLE_CONTROL)
+    @Inject(NGX_INJECTABLE_CONTROL)
     private readonly host: InjectableControl
   ) {}
 
-  @Input('injectControl')
+  @Input('injectControlName')
   readonly controlName!: string | number;
 
   @Input()

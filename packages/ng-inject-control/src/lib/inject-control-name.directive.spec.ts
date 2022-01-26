@@ -13,7 +13,7 @@ import {
   SpectatorDirective,
   createDirectiveFactory,
 } from '@ngneat/spectator/jest';
-import { InjectControlDirective } from './inject-control.directive';
+import { InjectControlNameDirective } from './inject-control-name.directive';
 import { InjectableControl } from './injectable-control.model';
 import { injectableControlProvider } from './injectable-control.token';
 
@@ -62,11 +62,11 @@ class InjectableFormTwoComponent implements InjectableControl {
       <ng-container [ngSwitch]="type">
         <ng-injectable-form
           *ngSwitchCase="'foo'"
-          injectControl="person"
+          injectControlName="person"
         ></ng-injectable-form>
         <ng-injectable-form-2
           *ngSwitchCase="'bar'"
-          injectControl="person"
+          injectControlName="person"
         ></ng-injectable-form-2>
       </ng-container>
     </div>
@@ -85,10 +85,10 @@ class CompositeFormComponent implements InjectableControl {
   }
 }
 
-describe('InjectControlDirective', () => {
-  let spectator: SpectatorDirective<InjectControlDirective>;
+describe(InjectControlNameDirective.name, () => {
+  let spectator: SpectatorDirective<InjectControlNameDirective>;
   const createDirective = createDirectiveFactory({
-    directive: InjectControlDirective,
+    directive: InjectControlNameDirective,
     declarations: [
       InjectableFormComponent,
       InjectableFormTwoComponent,
@@ -98,7 +98,7 @@ describe('InjectControlDirective', () => {
   });
 
   describe('with FormGroups', () => {
-  let fg: FormGroup;
+    let fg: FormGroup;
 
     beforeEach(() => {
       fg = new FormGroup({
@@ -111,12 +111,12 @@ describe('InjectControlDirective', () => {
       beforeEach(() => {
         spectator = createDirective(
           `<form [formGroup]="control">
-        <ng-injectable-form [injectControl]="target"></ng-injectable-form>
+        <ng-injectable-form [injectControlName]="target"></ng-injectable-form>
       </form>`,
           {
             hostProps: {
               control: fg,
-              target: "person",
+              target: 'person',
             },
           }
         );
@@ -138,7 +138,7 @@ describe('InjectControlDirective', () => {
         });
       });
 
-      describe("when changing input", () => {
+      describe('when changing input', () => {
         it('should create an instance', async () => {
           const name = 'Robert Speedwagon';
           const age = '23';
@@ -152,7 +152,7 @@ describe('InjectControlDirective', () => {
           expect(fg.value.person.age).toEqual(age);
           expect(fg.valid).toEqual(true);
 
-          spectator.setHostInput({target: "other"})
+          spectator.setHostInput({ target: 'other' });
           spectator.detectChanges();
           await spectator.fixture.whenStable();
           expect(fg.value.other.name).toEqual(name);
@@ -166,7 +166,7 @@ describe('InjectControlDirective', () => {
       beforeEach(() => {
         spectator = createDirective(
           `<form [formGroup]="control">
-        <ng-injectable-form injectControl="person" [disabled]="true"></ng-injectable-form>
+        <ng-injectable-form injectControlName="person" [disabled]="true"></ng-injectable-form>
       </form>`,
           {
             hostProps: {
@@ -189,7 +189,7 @@ describe('InjectControlDirective', () => {
           });
           spectator = createDirective(
             `<form [formGroup]="control">
-        <ng-injectable-form injectControl="person"></ng-injectable-form>
+        <ng-injectable-form injectControlName="person"></ng-injectable-form>
       </form>`,
             {
               hostProps: {
@@ -213,7 +213,7 @@ describe('InjectControlDirective', () => {
           });
           spectator = createDirective(
             `<form [formGroup]="control">
-        <ng-injectable-form injectControl="person"></ng-injectable-form>
+        <ng-injectable-form injectControlName="person"></ng-injectable-form>
       </form>`,
             {
               hostProps: {
@@ -236,7 +236,7 @@ describe('InjectControlDirective', () => {
           });
           spectator = createDirective(
             `<form [formGroup]="control">
-        <ng-injectable-form injectControl="person"></ng-injectable-form>
+        <ng-injectable-form injectControlName="person"></ng-injectable-form>
       </form>`,
             {
               hostProps: {
@@ -268,7 +268,7 @@ describe('InjectControlDirective', () => {
         });
         spectator = createDirective(
           `<form [formGroup]="control">
-        <ng-injectable-form injectControl="person"></ng-injectable-form>
+        <ng-injectable-form injectControlName="person"></ng-injectable-form>
       </form>`,
           {
             hostProps: {
@@ -290,7 +290,7 @@ describe('InjectControlDirective', () => {
         expect(() =>
           createDirective(
             `<form [formGroup]="control">
-        <ng-injectable-form injectControl="p"></ng-injectable-form>
+        <ng-injectable-form injectControlName="p"></ng-injectable-form>
       </form>`,
             {
               hostProps: {
@@ -310,7 +310,7 @@ describe('InjectControlDirective', () => {
           });
           spectator = createDirective(
             `<form [formGroup]="control">
-        <ng-composite-form injectControl="data"></ng-composite-form>
+        <ng-composite-form injectControlName="data"></ng-composite-form>
       </form>`,
             {
               hostProps: {
@@ -360,7 +360,7 @@ describe('InjectControlDirective', () => {
           });
           spectator = createDirective(
             `<form [formGroup]="control">
-        <ng-composite-form injectControl="data"></ng-composite-form>
+        <ng-composite-form injectControlName="data"></ng-composite-form>
       </form>`,
             {
               hostProps: {
@@ -413,7 +413,7 @@ describe('InjectControlDirective', () => {
           fg.disable();
           spectator = createDirective(
             `<form [formGroup]="control">
-        <ng-composite-form injectControl="data"></ng-composite-form>
+        <ng-composite-form injectControlName="data"></ng-composite-form>
       </form>`,
             {
               hostProps: {
@@ -439,38 +439,35 @@ describe('InjectControlDirective', () => {
     });
   });
 
-  describe("with FormArrays", () => {
+  describe('with FormArrays', () => {
     let fg: FormGroup;
     let fa: FormArray;
 
     beforeEach(() => {
-      fa= new FormArray([
-        new FormControl(),
-      ])
+      fa = new FormArray([new FormControl()]);
       fg = new FormGroup({
-        array: fa
-      })
-
-    })
+        array: fa,
+      });
+    });
 
     describe('with enabled subcontrol', () => {
       beforeEach(() => {
         spectator = createDirective(
           `<form [formGroup]="control">
             <ng-container formArrayName="array">
-              <ng-injectable-form [injectControl]="0"></ng-injectable-form>
+              <ng-injectable-form [injectControlName]="0"></ng-injectable-form>
             </ng-container>
           </form>`,
           {
             hostProps: {
-              control: fg
-            }
+              control: fg,
+            },
           }
-        )
-      })
+        );
+      });
 
       describe('when inputting data', () => {
-        it('should create an instance', ()=> {
+        it('should create an instance', () => {
           const name = 'Robert Speedwagon';
           const age = '23';
           expect(fa.valid).toEqual(false);
@@ -482,8 +479,8 @@ describe('InjectControlDirective', () => {
           spectator.typeInElement(age, '#age-input');
           expect(fa.value[0].age).toEqual(age);
           expect(fa.valid).toEqual(true);
-        })
-      })
-    })
+        });
+      });
+    });
   });
 });

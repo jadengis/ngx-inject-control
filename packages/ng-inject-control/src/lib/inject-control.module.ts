@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { InjectControlDirective } from './inject-control.directive';
+import { InjectControlNameDirective } from './inject-control-name.directive';
 
 @NgModule({
-  declarations: [InjectControlDirective],
-  exports: [InjectControlDirective],
+  declarations: [InjectControlNameDirective],
+  exports: [InjectControlNameDirective],
 })
 export class InjectControlModule {}
