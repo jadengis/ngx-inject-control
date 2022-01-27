@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'ng-inject-control',
+  displayName: 'ngx-inject-control',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
@@ -8,7 +8,7 @@ module.exports = {
       stringifyContentPathRegex: '\\.(html|svg)$',
     },
   },
-  coverageDirectory: '../../coverage/packages/ng-inject-control',
+  coverageDirectory: '../../coverage/packages/ngx-inject-control',
   transform: {
     '^.+.(ts|mjs|js|html)$': 'jest-preset-angular',
   },

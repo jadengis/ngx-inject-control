@@ -1,3 +1,11 @@
+# 1.0.0
+
+### BREAKING CHANGES
+
+- Rename library from `ng-inject-control` to `ngx-inject-control` to better match community patterns.
+- Rename `injectControl` directive to `injectControlName` directive to better match `@angular/forms` API.
+- Update README.md to describe the library
+
 # 0.3.0
 
 ### Features

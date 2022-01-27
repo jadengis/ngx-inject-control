@@ -1,33 +1,33 @@
 {
   "version": 2,
   "projects": {
-    "ng-inject-control": {
+    "ngx-inject-control": {
       "projectType": "library",
-      "root": "packages/ng-inject-control",
-      "sourceRoot": "packages/ng-inject-control/src",
-      "prefix": "ng-inject-control",
+      "root": "packages/ngx-inject-control",
+      "sourceRoot": "packages/ngx-inject-control/src",
+      "prefix": "ngx-inject-control",
       "targets": {
         "build": {
           "executor": "@nrwl/angular:package",
-          "outputs": ["dist/packages/ng-inject-control"],
+          "outputs": ["dist/packages/ngx-inject-control"],
           "options": {
-            "project": "packages/ng-inject-control/ng-package.json"
+            "project": "packages/ngx-inject-control/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "packages/ng-inject-control/tsconfig.lib.prod.json"
+              "tsConfig": "packages/ngx-inject-control/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "packages/ng-inject-control/tsconfig.lib.json"
+              "tsConfig": "packages/ngx-inject-control/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/packages/ng-inject-control"],
+          "outputs": ["coverage/packages/ngx-inject-control"],
           "options": {
-            "jestConfig": "packages/ng-inject-control/jest.config.js",
+            "jestConfig": "packages/ngx-inject-control/jest.config.js",
             "passWithNoTests": true
           }
         },
@@ -35,8 +35,8 @@
           "executor": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "packages/ng-inject-control/src/**/*.ts",
-              "packages/ng-inject-control/src/**/*.html"
+              "packages/ngx-inject-control/src/**/*.ts",
+              "packages/ngx-inject-control/src/**/*.html"
             ]
           },
           "outputs": ["{options.outputFile}"]

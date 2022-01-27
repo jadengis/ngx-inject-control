@@ -1,11 +1,11 @@
 {
-  "name": "ng-inject-control",
+  "name": "ngx-inject-control",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
     "nx": "nx",
     "start": "nx serve",
-    "build": "nx build",
+    "build": "nx build && cp README.md dist/ngx-inject-control",
     "test": "nx test",
     "lint": "nx workspace-lint && nx lint",
     "e2e": "nx e2e",

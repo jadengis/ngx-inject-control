@@ -17,7 +17,7 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
-      "ng-inject-control": ["packages/ng-inject-control/src/index.ts"]
+      "ngx-inject-control": ["packages/ngx-inject-control/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

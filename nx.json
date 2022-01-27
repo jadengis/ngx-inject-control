@@ -1,5 +1,5 @@
 {
-  "npmScope": "ng-inject-control",
+  "npmScope": "ngx-inject-control",
   "affected": {
     "defaultBase": "master"
   },
@@ -45,5 +45,5 @@
     },
     "@nrwl/angular:component": {}
   },
-  "defaultProject": "ng-inject-control"
+  "defaultProject": "ngx-inject-control"
 }
