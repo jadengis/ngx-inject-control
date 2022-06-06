@@ -10,8 +10,8 @@ import {
 import {
   AbstractControl,
   ControlContainer,
-  UntypedFormArray,
-  UntypedFormGroup,
+  FormArray,
+  FormGroup,
 } from '@angular/forms';
 import { InjectableControl } from './injectable-control.model';
 import { NGX_INJECTABLE_CONTROL } from './injectable-control.token';
@@ -24,6 +24,7 @@ const resolvedPromise = (() => Promise.resolve(null))();
 
 @Directive({
   selector: '[injectControlName]',
+  standalone: true,
 })
 export class InjectControlNameDirective implements OnChanges, OnDestroy {
   constructor(
@@ -74,7 +75,7 @@ export class InjectControlNameDirective implements OnChanges, OnDestroy {
     resolvedPromise.then(() => {
       copyControlState(this.host, control, this.isDisabled);
       replaceInParent(
-        parent as UntypedFormGroup | UntypedFormArray,
+        parent as FormGroup | FormArray,
         this.controlName,
         this.host.control
       );
@@ -86,7 +87,7 @@ export class InjectControlNameDirective implements OnChanges, OnDestroy {
     resolvedPromise.then(() => {
       if (this.originalControl) {
         replaceInParent(
-          parent as UntypedFormGroup | UntypedFormArray,
+          parent as FormGroup | FormArray,
           name,
           this.originalControl
         );
@@ -125,12 +126,12 @@ function copyControlState(
   }
 }
 function resolveControl(parent: AbstractControl | null, name: string | number) {
-  if (parent instanceof UntypedFormGroup) {
+  if (parent instanceof FormGroup) {
     if (typeof name !== 'string') {
       throw new Error(`name must be a string`);
     }
     return parent.get(name);
-  } else if (parent instanceof UntypedFormArray) {
+  } else if (parent instanceof FormArray) {
     if (typeof name !== 'number') {
       throw new Error(`name must be a number`);
     }
@@ -142,11 +143,11 @@ function resolveControl(parent: AbstractControl | null, name: string | number) {
 }
 
 function replaceInParent(
-  parent: UntypedFormGroup | UntypedFormArray,
+  parent: FormGroup | FormArray,
   name: string | number,
   control: AbstractControl
 ): void {
-  if (parent instanceof UntypedFormGroup) {
+  if (parent instanceof FormGroup) {
     parent.setControl(name as string, control);
   } else {
     parent.setControl(name as number, control);
