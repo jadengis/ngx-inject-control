@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
@@ -28,7 +28,7 @@ import { injectableControlProvider } from './injectable-control.token';
   providers: [injectableControlProvider(InjectableFormComponent)],
 })
 class InjectableFormComponent implements InjectableControl {
-  constructor(private readonly fb: FormBuilder) {}
+  constructor(private readonly fb: UntypedFormBuilder) {}
   readonly control = this.fb.group({
     name: ['', Validators.required],
     age: ['', Validators.required],
@@ -45,7 +45,7 @@ class InjectableFormComponent implements InjectableControl {
   providers: [injectableControlProvider(InjectableFormTwoComponent)],
 })
 class InjectableFormTwoComponent implements InjectableControl {
-  constructor(private readonly fb: FormBuilder) {}
+  constructor(private readonly fb: UntypedFormBuilder) {}
   readonly control = this.fb.group({
     name: ['', Validators.required],
   });
@@ -74,7 +74,7 @@ class InjectableFormTwoComponent implements InjectableControl {
   providers: [injectableControlProvider(CompositeFormComponent)],
 })
 class CompositeFormComponent implements InjectableControl {
-  constructor(private readonly fb: FormBuilder) {}
+  constructor(private readonly fb: UntypedFormBuilder) {}
   readonly control = this.fb.group({
     type: [null, Validators.required],
     person: [],
@@ -98,12 +98,12 @@ describe(InjectControlNameDirective.name, () => {
   });
 
   describe('with FormGroups', () => {
-    let fg: FormGroup;
+    let fg: UntypedFormGroup;
 
     beforeEach(() => {
-      fg = new FormGroup({
-        person: new FormControl(),
-        other: new FormControl(),
+      fg = new UntypedFormGroup({
+        person: new UntypedFormControl(),
+        other: new UntypedFormControl(),
       });
     });
 
@@ -184,8 +184,8 @@ describe(InjectControlNameDirective.name, () => {
     describe('with existing value', () => {
       describe('that matches expected format', () => {
         beforeEach(() => {
-          fg = new FormGroup({
-            person: new FormControl({ name: 'Bobo', age: '25' }),
+          fg = new UntypedFormGroup({
+            person: new UntypedFormControl({ name: 'Bobo', age: '25' }),
           });
           spectator = createDirective(
             `<form [formGroup]="control">
@@ -208,8 +208,8 @@ describe(InjectControlNameDirective.name, () => {
 
       describe('that is missing values', () => {
         beforeEach(() => {
-          fg = new FormGroup({
-            person: new FormControl({ name: 'Bobo' }),
+          fg = new UntypedFormGroup({
+            person: new UntypedFormControl({ name: 'Bobo' }),
           });
           spectator = createDirective(
             `<form [formGroup]="control">
@@ -231,8 +231,8 @@ describe(InjectControlNameDirective.name, () => {
 
       describe('that have too many values', () => {
         beforeEach(() => {
-          fg = new FormGroup({
-            person: new FormControl({ name: 'Bobo', age: 25, height: 200 }),
+          fg = new UntypedFormGroup({
+            person: new UntypedFormControl({ name: 'Bobo', age: 25, height: 200 }),
           });
           spectator = createDirective(
             `<form [formGroup]="control">
@@ -260,8 +260,8 @@ describe(InjectControlNameDirective.name, () => {
       }
 
       beforeEach(() => {
-        fg = new FormGroup({
-          person: new FormControl(
+        fg = new UntypedFormGroup({
+          person: new UntypedFormControl(
             { name: 'Bobo', age: '25' },
             alwaysBadValidator
           ),
@@ -305,8 +305,8 @@ describe(InjectControlNameDirective.name, () => {
     describe('in a composite form', () => {
       describe('with empty form group', () => {
         beforeEach(() => {
-          fg = new FormGroup({
-            data: new FormControl(),
+          fg = new UntypedFormGroup({
+            data: new UntypedFormControl(),
           });
           spectator = createDirective(
             `<form [formGroup]="control">
@@ -349,8 +349,8 @@ describe(InjectControlNameDirective.name, () => {
 
       describe('with a populated form', () => {
         beforeEach(async () => {
-          fg = new FormGroup({
-            data: new FormControl({
+          fg = new UntypedFormGroup({
+            data: new UntypedFormControl({
               type: 'foo',
               person: {
                 name: 'Robert',
@@ -401,8 +401,8 @@ describe(InjectControlNameDirective.name, () => {
 
       describe('with a disabled form', () => {
         beforeEach(async () => {
-          fg = new FormGroup({
-            data: new FormControl({
+          fg = new UntypedFormGroup({
+            data: new UntypedFormControl({
               type: 'foo',
               person: {
                 name: 'Robert',
@@ -440,12 +440,12 @@ describe(InjectControlNameDirective.name, () => {
   });
 
   describe('with FormArrays', () => {
-    let fg: FormGroup;
-    let fa: FormArray;
+    let fg: UntypedFormGroup;
+    let fa: UntypedFormArray;
 
     beforeEach(() => {
-      fa = new FormArray([new FormControl()]);
-      fg = new FormGroup({
+      fa = new UntypedFormArray([new UntypedFormControl()]);
+      fg = new UntypedFormGroup({
         array: fa,
       });
     });

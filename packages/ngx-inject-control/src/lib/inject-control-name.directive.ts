@@ -10,8 +10,8 @@ import {
 import {
   AbstractControl,
   ControlContainer,
-  FormArray,
-  FormGroup,
+  UntypedFormArray,
+  UntypedFormGroup,
 } from '@angular/forms';
 import { InjectableControl } from './injectable-control.model';
 import { NGX_INJECTABLE_CONTROL } from './injectable-control.token';
@@ -74,7 +74,7 @@ export class InjectControlNameDirective implements OnChanges, OnDestroy {
     resolvedPromise.then(() => {
       copyControlState(this.host, control, this.isDisabled);
       replaceInParent(
-        parent as FormGroup | FormArray,
+        parent as UntypedFormGroup | UntypedFormArray,
         this.controlName,
         this.host.control
       );
@@ -86,7 +86,7 @@ export class InjectControlNameDirective implements OnChanges, OnDestroy {
     resolvedPromise.then(() => {
       if (this.originalControl) {
         replaceInParent(
-          parent as FormGroup | FormArray,
+          parent as UntypedFormGroup | UntypedFormArray,
           name,
           this.originalControl
         );
@@ -125,12 +125,12 @@ function copyControlState(
   }
 }
 function resolveControl(parent: AbstractControl | null, name: string | number) {
-  if (parent instanceof FormGroup) {
+  if (parent instanceof UntypedFormGroup) {
     if (typeof name !== 'string') {
       throw new Error(`name must be a string`);
     }
     return parent.get(name);
-  } else if (parent instanceof FormArray) {
+  } else if (parent instanceof UntypedFormArray) {
     if (typeof name !== 'number') {
       throw new Error(`name must be a number`);
     }
@@ -142,11 +142,11 @@ function resolveControl(parent: AbstractControl | null, name: string | number) {
 }
 
 function replaceInParent(
-  parent: FormGroup | FormArray,
+  parent: UntypedFormGroup | UntypedFormArray,
   name: string | number,
   control: AbstractControl
 ): void {
-  if (parent instanceof FormGroup) {
+  if (parent instanceof UntypedFormGroup) {
     parent.setControl(name as string, control);
   } else {
     parent.setControl(name as number, control);

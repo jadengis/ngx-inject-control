@@ -28,14 +28,14 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "13.3.11",
-    "@angular/common": "13.3.11",
-    "@angular/compiler": "13.3.11",
-    "@angular/core": "13.3.11",
-    "@angular/forms": "13.3.11",
-    "@angular/platform-browser": "13.3.11",
-    "@angular/platform-browser-dynamic": "13.3.11",
-    "@angular/router": "13.3.11",
+    "@angular/animations": "14.0.0",
+    "@angular/common": "14.0.0",
+    "@angular/compiler": "14.0.0",
+    "@angular/core": "14.0.0",
+    "@angular/forms": "14.0.0",
+    "@angular/platform-browser": "14.0.0",
+    "@angular/platform-browser-dynamic": "14.0.0",
+    "@angular/router": "14.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "0.11.4"
@@ -46,8 +46,8 @@
     "@angular-eslint/eslint-plugin-template": "13.0.1",
     "@angular-eslint/template-parser": "13.0.1",
     "@angular-extensions/pretty-html-log": "^4.0.1",
-    "@angular/compiler-cli": "13.3.11",
-    "@angular/language-service": "13.3.11",
+    "@angular/compiler-cli": "14.0.0",
+    "@angular/language-service": "14.0.0",
     "@ngneat/spectator": "^7.2.0",
     "@nrwl/angular": "14.1.9",
     "@nrwl/cli": "14.1.9",
@@ -77,3 +77,4 @@
     "nx": "14.1.9"
   }
 }
+
