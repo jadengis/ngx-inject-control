@@ -17,6 +17,11 @@ import { InjectControlNameDirective } from './inject-control-name.directive';
 import { InjectableControl } from './injectable-control.model';
 import { injectableControlProvider } from './injectable-control.token';
 
+type Person = {
+  name: string;
+  ages: string;
+}
+
 @Component({
   selector: 'ng-injectable-form',
   template: `
@@ -76,12 +81,12 @@ class InjectableFormTwoComponent implements InjectableControl {
 class CompositeFormComponent implements InjectableControl {
   constructor(private readonly fb: FormBuilder) {}
   readonly control = this.fb.group({
-    type: [null, Validators.required],
-    person: [],
+    type: this.fb.nonNullable.control("", Validators.required),
+    person: this.fb.control<Person | null>(null),
   });
 
   get type(): string {
-    return this.control.value.type;
+    return this.control.value.type as string;
   }
 }
 

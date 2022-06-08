@@ -24,6 +24,7 @@ const resolvedPromise = (() => Promise.resolve(null))();
 
 @Directive({
   selector: '[injectControlName]',
+  standalone: true,
 })
 export class InjectControlNameDirective implements OnChanges, OnDestroy {
   constructor(

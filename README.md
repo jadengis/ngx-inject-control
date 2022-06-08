@@ -74,13 +74,16 @@ export class EmailInputComponent implements InjectableControl {
 
 #### Module:
 
+`InjectControlNameDirective` is a standalone component and can by imported directly in a module or
+component.
+
 ```typescript
-import { InjectControlModule } from 'ngx-inject-control';
+import { InjectControlNameDirective } from 'ngx-inject-control';
 
 
 @NgModule({
   declarations: [EmailInputComponent], // Injectable component must be in scope
-  imports: [InjectControlModule],
+  imports: [InjectControlNameDirective],
 })
 ```
 

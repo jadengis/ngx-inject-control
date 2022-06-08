@@ -1,3 +1,15 @@
+# 2.0.0
+
+### BREAKING CHANGES
+
+- `InjectControlNameDirective` is now a standalone directive. `InjectControlModule` has been
+  removed.
+- Now peers to Angular `>=14`.
+
+### Features
+
+- Supports Angular 14.
+
 # 1.0.0
 
 ### BREAKING CHANGES

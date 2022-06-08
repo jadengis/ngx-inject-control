@@ -1,9 +1,9 @@
-name: Test
+name: Build
 
 on: push
 
 jobs:
-  build:
+  test:
     runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
@@ -11,7 +11,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
       - name: Cache .npm
         id: npm-cache
         uses: actions/cache@v2
@@ -33,4 +33,4 @@ jobs:
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: npm install
       - name: Lint workspace
-        run: npm run test
+        run: npm run build

@@ -27,7 +27,7 @@
           "executor": "@nrwl/jest:jest",
           "outputs": ["coverage/packages/ngx-inject-control"],
           "options": {
-            "jestConfig": "packages/ngx-inject-control/jest.config.js",
+            "jestConfig": "packages/ngx-inject-control/jest.config.ts",
             "passWithNoTests": true
           }
         },
